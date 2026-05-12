@@ -57,6 +57,12 @@
     cursor: pointer;
 }
 
+.entry .metadata {
+    color: #555555;
+    font-size: 9pt;
+    margin-top: 2px;
+}
+
 .entry .author {
     font-size: 11pt;
     display: inline-block;

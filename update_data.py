@@ -2,6 +2,7 @@ import os
 import json
 import codecs
 import time
+import argparse
 
 BASE_DIR = os.path.dirname(__file__)
 
@@ -56,7 +57,7 @@ def parseBibtex(bibFile):
                         value = line.strip()
                         value = value.strip("} \n").replace("},", "").strip()
                         if len(value) > 0:
-                            parsedData[currentId][lastField] = parsedData[currentId][field] + " " + value
+                            parsedData[currentId][lastField] = parsedData[currentId][lastField] + " " + value
         fIn.close()
     return parsedData
 
@@ -69,13 +70,14 @@ def writeJSON(parsedData):
         fOut.close()
 
 
-def listAvailablePdf():
+def listAvailablePdf(entry_ids):
     # papersDirWin = papersDir.replace("/", "\\")
     fOut = open(AVAILABLE_PDF_FILE, "w")
     s = "const availablePdf = ["
     count = 0
     for file in os.listdir(PAPERS_DIR):
-        if file.endswith(".pdf"):
+        paper_id = file.replace(".pdf", "")
+        if file.endswith(".pdf") and paper_id in entry_ids:
             s += "\"" + file.replace(".pdf", "") + "\","
             count += 1
             if CREATE_THUMBNAILS:
@@ -86,12 +88,13 @@ def listAvailablePdf():
     fOut.write(s)
 
 
-def listAvailableImg():
+def listAvailableImg(entry_ids):
     fOut = open(AVAILABLE_IMG_FILE, "w")
     s = "const availableImg = ["
     count = 0
     for file in os.listdir(PAPERS_IMG_DIR):
-        if file.endswith(".png"):
+        paper_id = file.replace(".png", "")
+        if file.endswith(".png") and paper_id in entry_ids:
             s += "\"" + file.replace(".png", "") + "\","
             count += 1
     if count > 0:
@@ -116,11 +119,12 @@ def listAvailableImg():
 
 def update():
     print("convert bib file")
-    writeJSON(parseBibtex(BIB_FILE))
+    parsed_data = parseBibtex(BIB_FILE)
+    writeJSON(parsed_data)
     print("list available paper PDF files")
-    listAvailablePdf()
+    listAvailablePdf(parsed_data)
     print("list available paper images")
-    listAvailableImg()
+    listAvailableImg(parsed_data)
     print("done")
 
 
@@ -133,7 +137,15 @@ def generate_folders():
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--once", action="store_true", help="generate data files once and exit")
+    args = parser.parse_args()
+
     generate_folders()
+
+    if args.once:
+        update()
+        raise SystemExit(0)
 
     prevBibTime = 0
     while True:

@@ -1,5 +1,1 @@
-const userDefinedTagCategories = {
-	"type": {
-		"description": "type of the paper"
-	}
-}
+const userDefinedTagCategories = {}

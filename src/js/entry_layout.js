@@ -142,6 +142,7 @@ const entryLayout = (function () {
         createEntryHeaderDiv(id, entry).appendTo(entryMainDiv);
         createTitleDiv(id, entry, pdfFile).appendTo(entryMainDiv);
         createAuthors(entry['author']).appendTo(entryMainDiv);
+        createMetadata(entry).appendTo(entryMainDiv);
         createAbstract(entry['abstract'], true).appendTo(entryMainDiv);
         createTags(id).appendTo(entryMainDiv);
         if (entry['comment']) {
@@ -301,6 +302,29 @@ const entryLayout = (function () {
             }
         });
         return authorsDiv;
+    }
+
+    function createMetadata(entry) {
+        var metadataDiv = $("<div>", {
+            class: "metadata"
+        });
+        var venue = entry['journal'] || entry['booktitle'] || entry['series'];
+        if (venue) {
+            $("<span>", {
+                class: "venue",
+                text: "Venue: " + latexUtil.latexToHtml(venue)
+            }).appendTo(metadataDiv);
+        }
+        if (entry['doi']) {
+            if (venue) {
+                metadataDiv.append(" ");
+            }
+            $("<span>", {
+                class: "doi",
+                text: "DOI: " + entry['doi']
+            }).appendTo(metadataDiv);
+        }
+        return metadataDiv;
     }
 
     function createAbstract(text, shorten) {

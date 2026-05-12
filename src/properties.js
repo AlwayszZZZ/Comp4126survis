@@ -2,7 +2,7 @@
  * Name as used as title for the main page
  * @type {string}
  */
-var title = 'SurVis Literature Collection';
+var title = 'Thyroid Nodule Segmentation Literature Collection';
 
 /**
  * Relative path to the data directory
@@ -31,7 +31,7 @@ var stylesDir = 'styles/';
  */
 var tagCloudOptions = [{
     field: 'keywords',
-    title: 'Keywords',
+    title: 'Tags',
     minTagFrequency: 1
 }, {
     field: 'author',
@@ -47,15 +47,15 @@ var tagCloudOptions = [{
  * If BibTeX entries (and tags) should be editable
  * @type {boolean}
  */
-var editable = true;
+var editable = false;
 
 /**
  * Subtitle describing the paper the data is referring to (set to null to deactivate)
  * @type {{html: string, id: string}}
  */
 var paper = {
-    html: 'Sample literature collection for <b><a href="http://www.visus.uni-stuttgart.de/uploads/tx_vispublications/eurovis14-star.pdf" target="_blank">SurVis</a></b>',
-    id: 'Beck2016Visual'
+    html: 'This SurVis collection presents selected papers reviewed for a literature review on deep learning methods for thyroid nodule segmentation in ultrasound images.',
+    id: null
 };
 
 /**

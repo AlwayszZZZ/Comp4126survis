@@ -339,12 +339,12 @@ const timeline = (function () {
                 .attr('y', -1)
                 .attr('width', yearIntervalLength * barWidth)
                 .attr('height', displayHeight + 2)
-                .style('fill', even == 'Even' ? '#FFFFFF' : '#CCCCCC');
+                .style('fill', even == 'Even' ? '#FFFFFF' : '#F7F7F7');
             chart.append('text').attr('class', 'period' + even)
                 .attr('x', x + 1)
                 .attr('y', height / 5).text(intervalYear)
                 .style('font-size', '14pt')
-                .style('fill', even != 'Even' ? '#FFFFFF' : '#CCCCCC');
+                .style('fill', '#BBBBBB');
         }
         var frequencyIntervalIndex = 0;
         while (frequencyIntervalIndex < niceIntervals.length - 1 && maxFrequency / niceIntervals[frequencyIntervalIndex] > maxFrequencyIntervals) {
@@ -366,6 +366,7 @@ const timeline = (function () {
                 .attr('x', 0)
                 .attr('y', y + 12)
                 .style('font-size', '12pt')
+                .style('display', 'none')
                 .text(i);
         }
         return {x: x, y: y};
@@ -391,7 +392,9 @@ const timeline = (function () {
             .on('click', function (d) {
                 selectors.toggleSelector('year', d.key, d3.event);
             });
-        chart.selectAll('svg').data(d3data).enter().append('rect')
+        chart.selectAll('svg').data(d3data.filter(function (d) {
+            return d.value > 0;
+        })).enter().append('rect')
             .attr('class', 'bar total tooltip')
             .style('fill', 'var(--bgColor3)')
             .style('stroke', 'black')
@@ -411,6 +414,25 @@ const timeline = (function () {
             })
             .on('click', function (d) {
                 selectors.toggleSelector('year', d.key, d3.event);
+            });
+        chart.selectAll('svg').data(d3data.filter(function (d) {
+            return d.value > 0;
+        })).enter().append('text')
+            .attr('class', 'bar-label')
+            .attr('x', function (d) {
+                return (d.key - minYear) * barWidth + barWidth / 2;
+            })
+            .attr('y', function (d) {
+                return height - publicationHeight * d.value / 2;
+            })
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'middle')
+            .style('font-size', '10pt')
+            .style('font-weight', 'bold')
+            .style('fill', '#333333')
+            .style('pointer-events', 'none')
+            .text(function (d) {
+                return d.value;
             });
     }
 
